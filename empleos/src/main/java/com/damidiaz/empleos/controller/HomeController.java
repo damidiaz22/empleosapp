@@ -14,7 +14,7 @@ import com.damidiaz.empleos.model.Vacante;
 @Controller
 public class HomeController {
 	
-	//holaaa
+	//holaaa como estas
 	
 	@GetMapping("/tabla")
 	public String mostrarTabla(Model model) {
