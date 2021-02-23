@@ -14,6 +14,8 @@ import com.damidiaz.empleos.model.Vacante;
 @Controller
 public class HomeController {
 	
+	//holaaa
+	
 	@GetMapping("/tabla")
 	public String mostrarTabla(Model model) {
 		List <Vacante> lista = getVacante();
