@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class VacantesController {
 
 	@GetMapping("/delete")
-	public String eliminar(@RequestParam("id") int idVacante) {
+	public String eliminar(@RequestParam("id") int idVacante,Model model) {
 		System.out.println("borrando vacante :" + idVacante);
-		
+		model.addAttribute("idVacante", idVacante);
 		return "mensaje";
 	}
 	
