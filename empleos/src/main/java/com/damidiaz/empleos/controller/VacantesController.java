@@ -14,7 +14,7 @@ public class VacantesController {
 	@GetMapping("/delete")
 	public String eliminar(@RequestParam("id") int idVacante,Model model) {
 		System.out.println("borrando vacante :" + idVacante);
-		model.addAttribute("idVacante", idVacante);
+		model.addAttribute("id", idVacante);
 		return "mensaje";
 	}
 	
