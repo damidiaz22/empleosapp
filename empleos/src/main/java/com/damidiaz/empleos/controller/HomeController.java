@@ -1,6 +1,5 @@
 package com.damidiaz.empleos.controller;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,8 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.damidiaz.empleos.model.Vacante;
-
-import service.VacantesService;
+import com.damidiaz.empleos.service.VacantesService;
 
 @Controller
 public class HomeController {
