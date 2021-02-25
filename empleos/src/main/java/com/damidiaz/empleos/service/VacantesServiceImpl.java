@@ -27,7 +27,7 @@ public class VacantesServiceImpl  implements VacantesService {
 			vacante1.setFecha(sdf.parse("09-22-2020"));
 			vacante1.setSalario(13000.0);
 			vacante1.setDestacado(1);
-			vacante1.setImagen("empresa1.png");
+			vacante1.setImagen("logo1.png");
 			lista.add(vacante1);
 			
 			
@@ -38,7 +38,7 @@ public class VacantesServiceImpl  implements VacantesService {
 			vacante2.setFecha(sdf.parse("09-22-2020"));
 			vacante2.setSalario(1900.0);
 			vacante2.setDestacado(0);
-			vacante2.setImagen("empresa2.png");
+			vacante2.setImagen("logo2.png");
 			lista.add(vacante2);
 			
 			Vacante vacante3 = new Vacante();
@@ -57,7 +57,7 @@ public class VacantesServiceImpl  implements VacantesService {
 			vacante4.setFecha(sdf.parse("09-22-2020"));
 			vacante4.setSalario(9000.0);
 			vacante4.setDestacado(1);
-			vacante4.setImagen("empresa3.png");
+			vacante4.setImagen("logo3.png");
 			lista.add(vacante4);
 			
 		}catch(Exception e) {
