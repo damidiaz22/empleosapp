@@ -83,4 +83,9 @@ public class VacantesServiceImpl  implements VacantesService {
 		return null;
 	}
 
+	@Override
+	public void guardar(Vacante vacante) {
+		lista.add(vacante);
+	}
+
 }
