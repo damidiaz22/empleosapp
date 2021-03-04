@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,36 +18,43 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.damidiaz.empleos.model.Vacante;
+import com.damidiaz.empleos.service.CategoriasService;
 import com.damidiaz.empleos.service.VacantesService;
+import com.damidiaz.empleos.util.Utileria;
 
 @Controller
 @RequestMapping("/vacantes")
 public class VacantesController {
 	
+//	@Value("${empleosapp.ruta.imagenes}")
+//	private String ruta;
+
 	@Autowired
 	private VacantesService serviceVacantes;
-	
-	
+
+	@Autowired
+	private CategoriasService serviceCategorias;
+
 	@GetMapping("/index")
 	public String mostrarIndex(Model model) {
-	
+
 		List<Vacante> listaVacantes = this.serviceVacantes.buscarTodas();
 		model.addAttribute("vacantes", listaVacantes);
-		
+
 		return "vacantes/listVacantes";
 	}
-	
-	
-	
+
 	@GetMapping("/create")
-	public String crear(Vacante vacante) {
+	public String crear(Vacante vacante, Model model) {
+
+		model.addAttribute("categorias", this.serviceCategorias.buscarTodas());
 		return "vacantes/formVacante";
 	}
-	
-	
+
 //	@PostMapping("/save")
 //	public String guardar(@RequestParam("nombre") String nombre,@RequestParam("descripcion") String descripcion,@RequestParam("estatus") 
 //	String status,@RequestParam("fecha") String fecha,@RequestParam("destacado") int destacado,@RequestParam("salario") double salario,
@@ -63,53 +71,60 @@ public class VacantesController {
 //	}
 
 	@PostMapping("/save")
-	public String guardar(Vacante vacante,BindingResult result,RedirectAttributes attributes) {
-		
-		
-		if(result.hasErrors()) {
-			
-			for(ObjectError error : result.getAllErrors()) {
+	public String guardar(Vacante vacante, BindingResult result, RedirectAttributes attributes,
+			@RequestParam("archivoImagen") MultipartFile multiPart) {
+
+		if (result.hasErrors()) {
+
+			for (ObjectError error : result.getAllErrors()) {
 				System.out.println("Ocurrio un error:" + error.getDefaultMessage());
 			}
 			
 			return "vacantes/formVacante";
 		}
 		
+		if (!multiPart.isEmpty()) {
+			// String ruta = "/empleos/img-vacantes/"; // Linux/MAC
+			String ruta = "c:/empleos/img-vacantes/"; // Windows
+			String nombreImagen = Utileria.guardarArchivo(multiPart, ruta);
+			if (nombreImagen != null) { // La imagen si se subio
+				// Procesamos la variable nombreImagen
+				vacante.setImagen(nombreImagen);
+			}
+		}
+
 		this.serviceVacantes.guardar(vacante);
 //		model.addAttribute("msg","Registro guardado");
-		attributes.addFlashAttribute("msj","Registro guardado");
+		attributes.addFlashAttribute("msj", "Registro guardado");
 		System.out.println("Vacante:" + vacante);
-		return"redirect:/vacantes/index";
+		return "redirect:/vacantes/index";
 	}
-	
-	
+
 	@GetMapping("/delete")
-	public String eliminar(@RequestParam("id") int idVacante,Model model) {
+	public String eliminar(@RequestParam("id") int idVacante, Model model) {
 		System.out.println("borrando vacante :" + idVacante);
 		model.addAttribute("id", idVacante);
 		return "mensaje";
 	}
-	
+
 	@GetMapping("/view/{id}")
-	 public String verDetalle(@PathVariable("id")int idVacante,Model model) {
-		
+	public String verDetalle(@PathVariable("id") int idVacante, Model model) {
+
 		Vacante vacante = this.serviceVacantes.buscarPorId(idVacante);
-		
+
 		System.out.println("id vacante:" + idVacante);
-		model.addAttribute("idVacante",idVacante);
-		model.addAttribute("vacante",vacante);
-		
+		model.addAttribute("idVacante", idVacante);
+		model.addAttribute("vacante", vacante);
+
 		return "detalle";
-		
+
 	}
-	
+
 	@InitBinder
 	public void initBinder(WebDataBinder webDataBinder) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-		webDataBinder.registerCustomEditor(Date.class,new CustomDateEditor(dateFormat,false));
-		
-		
+		webDataBinder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
+
 	}
-	
-	
+
 }

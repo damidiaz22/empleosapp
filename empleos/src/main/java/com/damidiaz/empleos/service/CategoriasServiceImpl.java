@@ -44,6 +44,11 @@ public class CategoriasServiceImpl implements CategoriasService {
 			categoria4.setDescripcion("");
 			lista.add(categoria4);
 			
+			Categoria categoria5 = new Categoria();
+			categoria5.setId(5);
+			categoria5.setNombre("Desarrollo de softwere");
+			categoria5.setDescripcion("programador");
+			lista.add(categoria5);
 			
 		}catch(Exception e) {
 			System.out.println(e.getMessage());

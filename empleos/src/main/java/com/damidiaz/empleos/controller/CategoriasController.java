@@ -73,9 +73,7 @@ public class CategoriasController {
 			return "categoria/formCategorias";
 		}
 		
-		this.serviceCategorias.guardar(categoria);
-		attributes.addFlashAttribute("msj","Registro guardado");
-		
+		this.serviceCategorias.guardar(categoria);	
 		return "redirect:/categorias/index";
 	}
 	
