@@ -1,5 +1,6 @@
 package com.damidiaz.empleos.model; 
 
+
 public class Categoria {
 
 	private Integer id;
