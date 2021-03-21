@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +39,12 @@ public class VacantesController {
 	private VacantesService serviceVacantes;
 
 	@Autowired
+	/*
+	 * la anotacion @Qualifier sirve para decirle a spring cual implementacion del servicio CategoriasService se debe utilizar
+	 * en esta clase,en este caso la implementacion que va a ser inyectada es CsategoriasServiceJpa
+	 * 
+	 */
+	//@Qualifier("categoriasServiceJpa")
 	private CategoriasService serviceCategorias;
 
 	@GetMapping("/index")
@@ -50,8 +58,6 @@ public class VacantesController {
 
 	@GetMapping("/create")
 	public String crear(Vacante vacante, Model model) {
-
-		model.addAttribute("categorias", this.serviceCategorias.buscarTodas());
 		return "vacantes/formVacante";
 	}
 
@@ -100,13 +106,22 @@ public class VacantesController {
 		return "redirect:/vacantes/index";
 	}
 
-	@GetMapping("/delete")
-	public String eliminar(@RequestParam("id") int idVacante, Model model) {
+	@GetMapping("/delete/{id}")
+	public String eliminar(@PathVariable("id") int idVacante,RedirectAttributes attributes) {
 		System.out.println("borrando vacante :" + idVacante);
-		model.addAttribute("id", idVacante);
-		return "mensaje";
+		this.serviceVacantes.eliminar(idVacante);
+		attributes.addFlashAttribute("msj","La vacante fue eliminada!");
+		return "redirect:/vacantes/index";
 	}
 
+	
+	@GetMapping("/edit/{id}")
+	public String editar(@PathVariable("id") int idVacante,Model model) {
+		Vacante vacante = this.serviceVacantes.buscarPorId(idVacante);
+		model.addAttribute("vacante",vacante);
+		return "vacantes/formVacante";
+	}
+	
 	@GetMapping("/view/{id}")
 	public String verDetalle(@PathVariable("id") int idVacante, Model model) {
 
@@ -125,6 +140,15 @@ public class VacantesController {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 		webDataBinder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
 
+	}
+	
+	/*
+	 * la anotacion @ModelAttribute a nivel de metodo sirve para crear atributos que pueden ser usados implicitamente
+	 * por todos los metodos del controlador
+	 */
+	@ModelAttribute
+	public void setGenericos(Model model) {
+		model.addAttribute("categorias", this.serviceCategorias.buscarTodas());
 	}
 
 }

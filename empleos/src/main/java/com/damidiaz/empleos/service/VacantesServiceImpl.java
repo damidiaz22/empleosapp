@@ -88,4 +88,16 @@ public class VacantesServiceImpl  implements VacantesService {
 		lista.add(vacante);
 	}
 
+	@Override
+	public List<Vacante> buscarDestacadas() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void eliminar(Integer id) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -73,4 +73,10 @@ public class CategoriasServiceImpl implements CategoriasService {
 		return null;
 	}
 
+	@Override
+	public void eliminar(Integer idVacante) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

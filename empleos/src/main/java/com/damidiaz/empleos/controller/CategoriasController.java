@@ -13,12 +13,13 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.damidiaz.empleos.model.Categoria;
+import com.damidiaz.empleos.model.Vacante;
 import com.damidiaz.empleos.service.CategoriasService;
 
 @Controller
@@ -28,10 +29,28 @@ public class CategoriasController {
 	
 	
 	@Autowired
+	/*
+	 * la anotacion @Qualifier sirve para decirle a spring cual implementacion del servicio CategoriasService se debe utilizar
+	 * en esta clase,en este caso la implementacion que va a ser inyectada es CsategoriasServiceJpa
+	 * 
+	 */
+	//@Qualifier("categoriasServiceJpa")
 	private CategoriasService serviceCategorias;
 	
 	
+	@GetMapping("/edit/{id}")
+	public String editar(@PathVariable("id") int idCategoria,Model model) {
+		Categoria categoria = this.serviceCategorias.buscarPorId(idCategoria);
+		model.addAttribute("categoria",categoria);
+		return "categorias/formCategoria";
+	}
 	
+	@GetMapping("/delete/{id}")
+	public String eliminar(@PathVariable("id") int idCategoria,RedirectAttributes attributes) {
+		this.serviceCategorias.eliminar(idCategoria);
+		attributes.addFlashAttribute("msj","La categoria fue eliminada!");
+		return "redirect:/categorias/index";
+	}
 	
 	@GetMapping("/index")
 	//@RequestMapping(value = "/index", method = RequestMethod.GET)
