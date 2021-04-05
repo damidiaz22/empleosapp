@@ -5,9 +5,9 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,7 +31,7 @@ import com.damidiaz.empleos.util.Utileria;
 @Controller
 @RequestMapping("/vacantes")
 public class VacantesController {
-	
+
 //	@Value("${empleosapp.ruta.imagenes}")
 //	private String ruta;
 
@@ -40,19 +40,25 @@ public class VacantesController {
 
 	@Autowired
 	/*
-	 * la anotacion @Qualifier sirve para decirle a spring cual implementacion del servicio CategoriasService se debe utilizar
-	 * en esta clase,en este caso la implementacion que va a ser inyectada es CsategoriasServiceJpa
+	 * la anotacion @Qualifier sirve para decirle a spring cual implementacion del
+	 * servicio CategoriasService se debe utilizar en esta clase,en este caso la
+	 * implementacion que va a ser inyectada es CsategoriasServiceJpa
 	 * 
 	 */
-	//@Qualifier("categoriasServiceJpa")
+	// @Qualifier("categoriasServiceJpa")
 	private CategoriasService serviceCategorias;
 
 	@GetMapping("/index")
 	public String mostrarIndex(Model model) {
-
 		List<Vacante> listaVacantes = this.serviceVacantes.buscarTodas();
 		model.addAttribute("vacantes", listaVacantes);
+		return "vacantes/listVacantes";
+	}
 
+	@GetMapping("/indexPaginate")
+	public String mostrarIndexPaginado(Model model, Pageable page) {
+		Page<Vacante> listaVacantes = this.serviceVacantes.buscarTodas(page);
+		model.addAttribute("vacantes", listaVacantes);
 		return "vacantes/listVacantes";
 	}
 
@@ -85,10 +91,10 @@ public class VacantesController {
 			for (ObjectError error : result.getAllErrors()) {
 				System.out.println("Ocurrio un error:" + error.getDefaultMessage());
 			}
-			
+
 			return "vacantes/formVacante";
 		}
-		
+
 		if (!multiPart.isEmpty()) {
 			// String ruta = "/empleos/img-vacantes/"; // Linux/MAC
 			String ruta = "c:/empleos/img-vacantes/"; // Windows
@@ -107,21 +113,20 @@ public class VacantesController {
 	}
 
 	@GetMapping("/delete/{id}")
-	public String eliminar(@PathVariable("id") int idVacante,RedirectAttributes attributes) {
+	public String eliminar(@PathVariable("id") int idVacante, RedirectAttributes attributes) {
 		System.out.println("borrando vacante :" + idVacante);
 		this.serviceVacantes.eliminar(idVacante);
-		attributes.addFlashAttribute("msj","La vacante fue eliminada!");
+		attributes.addFlashAttribute("msj", "La vacante fue eliminada!");
 		return "redirect:/vacantes/index";
 	}
 
-	
 	@GetMapping("/edit/{id}")
-	public String editar(@PathVariable("id") int idVacante,Model model) {
+	public String editar(@PathVariable("id") int idVacante, Model model) {
 		Vacante vacante = this.serviceVacantes.buscarPorId(idVacante);
-		model.addAttribute("vacante",vacante);
+		model.addAttribute("vacante", vacante);
 		return "vacantes/formVacante";
 	}
-	
+
 	@GetMapping("/view/{id}")
 	public String verDetalle(@PathVariable("id") int idVacante, Model model) {
 
@@ -141,10 +146,10 @@ public class VacantesController {
 		webDataBinder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
 
 	}
-	
+
 	/*
-	 * la anotacion @ModelAttribute a nivel de metodo sirve para crear atributos que pueden ser usados implicitamente
-	 * por todos los metodos del controlador
+	 * la anotacion @ModelAttribute a nivel de metodo sirve para crear atributos que
+	 * pueden ser usados implicitamente por todos los metodos del controlador
 	 */
 	@ModelAttribute
 	public void setGenericos(Model model) {

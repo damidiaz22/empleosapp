@@ -100,4 +100,8 @@ public class Vacante {
 		this.salario = salario;
 	}
 	
+	public void reset() {
+		this.imagen = null;
+	}
+	
 }
