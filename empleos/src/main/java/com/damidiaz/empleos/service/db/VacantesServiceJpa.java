@@ -54,6 +54,8 @@ public class VacantesServiceJpa implements VacantesService {
 	public void eliminar(Integer id) {
 		this.vacantesRepo.deleteById(id);
 	}
+	
+	
 
 	@Override
 	public List<Vacante> buscarByExample(Example<Vacante> example) {

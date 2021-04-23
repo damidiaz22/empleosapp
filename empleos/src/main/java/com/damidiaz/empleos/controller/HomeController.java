@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -40,13 +41,27 @@ public class HomeController {
 	
 	
 	
+	@GetMapping("/index")
+	public String mostrarIndex(Authentication auth) {
+		String userName = auth.getName();
+		
+	  
+		System.out.println("nombres de usuario:" + userName);
+		
+		
+		return "redirect:/";
+	}
+	
 	@GetMapping("/search")
 	public String buscar(@ModelAttribute("search") Vacante vacante,Model model) {
 		
 		ExampleMatcher matcher = ExampleMatcher.matching().withMatcher("descripcion",ExampleMatcher.GenericPropertyMatchers.contains());
 		
+		
 		Example <Vacante> example = Example.of(vacante,matcher);
 		List <Vacante> lista = this.serviceVacantes.buscarByExample(example);
+		
+		// agrega al modelo el atributo "vacantes" lista para renderizarla en la pagina principal
 		model.addAttribute("vacantes",lista);
 		
 		System.out.println(vacante);
