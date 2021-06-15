@@ -19,6 +19,9 @@ import com.damidiaz.empleos.service.CategoriasService;
  * es necesario marcar algunas de las dos implementacion de la interfas con la notacion @Primary,de este modo no habra conflicto al momento de
  * cargar el contxto de spring.
  */
+/*
+ * pruebas para git..
+ */
 @Primary
 public class CategoriasServiceJpa implements CategoriasService {
 
