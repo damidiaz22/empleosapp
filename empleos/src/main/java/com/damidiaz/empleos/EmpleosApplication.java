@@ -2,7 +2,7 @@ package com.damidiaz.empleos;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-//holacomovatodobiennnn
+
 @SpringBootApplication
 public class EmpleosApplication {
 
@@ -12,7 +12,4 @@ public class EmpleosApplication {
 
 }
 
-//cambios para git en branch master
-// este cambio es desde empleosapp2 en el branch master
-//verificamos que no se cree un branch con el mismo nombre
-//repitiendo paso anterior 
+
